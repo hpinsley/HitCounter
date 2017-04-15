@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
@@ -17,6 +18,13 @@ namespace HitCounter
             _hitCount += 1;
 
             this.Clients.All.onHitRecorded(_hitCount);
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            _hitCount -= 1;
+            this.Clients.All.onHitRecorded(_hitCount);
+            return base.OnDisconnected(stopCalled);
         }
     }
 }
